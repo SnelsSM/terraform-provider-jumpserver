@@ -24,22 +24,22 @@ func resourceAssetPermission() *schema.Resource {
 			},
 			"is_active": {
 				Type:     schema.TypeBool,
-				Required: true,
+				Optional: true,
 			},
 			"users_display": {
 				Type:     schema.TypeList,
 				Elem:     &schema.Schema{Type: schema.TypeString},
-				Required: true,
+				Optional: true,
 			},
 			"assets_display": {
 				Type:     schema.TypeList,
 				Elem:     &schema.Schema{Type: schema.TypeString},
-				Required: true,
+				Optional: true,
 			},
 			"system_users_display": {
 				Type:     schema.TypeList,
 				Elem:     &schema.Schema{Type: schema.TypeString},
-				Required: true,
+				Optional: true,
 			},
 		},
 	}

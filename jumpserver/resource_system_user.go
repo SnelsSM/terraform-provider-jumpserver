@@ -24,11 +24,11 @@ func resourceSystemUser() *schema.Resource {
 			},
 			"username": {
 				Type:     schema.TypeString,
-				Required: true,
+				Optional: true,
 			},
 			"password": {
 				Type:      schema.TypeString,
-				Required:  true,
+				Optional:  true,
 				Sensitive: true,
 			},
 			"type": {

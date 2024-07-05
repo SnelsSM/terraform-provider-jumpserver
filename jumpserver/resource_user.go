@@ -33,7 +33,7 @@ func resourceUser() *schema.Resource {
 			},
 			"is_active": {
 				Type:     schema.TypeBool,
-				Required: true,
+				Optional: true,
 			},
 			"system_roles": {
 				Type:     schema.TypeList,
