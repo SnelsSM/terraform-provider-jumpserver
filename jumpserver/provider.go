@@ -35,6 +35,7 @@ func Provider() *schema.Provider {
 			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
+			"jumpserver_host":             resourceHost(),
 			"jumpserver_user":             resourceUser(),
 			"jumpserver_asset":            resourceAsset(),
 			"jumpserver_system_user":      resourceSystemUser(),
