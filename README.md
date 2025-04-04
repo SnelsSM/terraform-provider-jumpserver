@@ -14,7 +14,7 @@ Add the following to your `main.tf` file to use the Jumpserver provider:
 terraform {
   required_providers {
     jumpserver = {
-      source  = "atwatanmalikm/jumpserver"
+      source  = "gustavo-bolis/jumpserver"
       version = "~> 1.0.0"
     }
   }

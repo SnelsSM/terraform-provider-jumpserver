@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/atwatanmalikm/terraform-provider-jumpserver/jumpserver"
+	"github.com/gustavo-bolis/terraform-provider-jumpserver/jumpserver"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/plugin"
 )
 

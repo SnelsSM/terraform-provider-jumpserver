@@ -1,4 +1,4 @@
-module github.com/atwatanmalikm/terraform-provider-jumpserver
+module github.com/gustavo-bolis/terraform-provider-jumpserver
 
 go 1.22.5
 
