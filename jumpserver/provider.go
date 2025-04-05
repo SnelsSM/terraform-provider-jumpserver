@@ -20,6 +20,15 @@ type Config struct {
 	SkipTLSVerify bool
 }
 
+func (c *Config) NewHTTPClient() *http.Client {
+	transport := &http.Transport{
+		TLSClientConfig: &tls.Config{
+			InsecureSkipVerify: c.SkipTLSVerify,
+		},
+	}
+	return &http.Client{Transport: transport}
+}
+
 func Provider() *schema.Provider {
 	return &schema.Provider{
 		Schema: map[string]*schema.Schema{
@@ -62,7 +71,14 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}
 	password := d.Get("password").(string)
 	skipTLS := d.Get("skip_tls_verify").(bool)
 
-	token, err := getToken(baseURL, username, password, skipTLS)
+	transport := &http.Transport{
+		TLSClientConfig: &tls.Config{
+			InsecureSkipVerify: skipTLS,
+		},
+	}
+	client := &http.Client{Transport: transport}
+
+	token, err := getToken(client, baseURL, username, password)
 	if err != nil {
 		return nil, diag.FromErr(err)
 	}
@@ -76,21 +92,12 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}
 	}, diags
 }
 
-func getToken(baseURL, username, password string, skipTLS bool) (string, error) {
-	// Monta um *http.Client* que pula a validação de TLS quando skipTLS == true.
-	transport := &http.Transport{
-		TLSClientConfig: &tls.Config{
-			InsecureSkipVerify: skipTLS,
-		},
-	}
-	client := &http.Client{Transport: transport}
-
+func getToken(client *http.Client, baseURL, username, password string) (string, error) {
 	url := baseURL + "/api/v1/authentication/auth/"
 	credentials := map[string]string{
 		"username": username,
 		"password": password,
 	}
-
 	jsonValue, _ := json.Marshal(credentials)
 
 	resp, err := client.Post(url, "application/json", bytes.NewBuffer(jsonValue))

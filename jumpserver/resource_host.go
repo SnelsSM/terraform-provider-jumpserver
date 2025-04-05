@@ -156,7 +156,7 @@ func resourceHostCreate(ctx context.Context, d *schema.ResourceData, m interface
 	req.Header.Set("Authorization", "Bearer "+c.Token)
 	req.Header.Set("Content-Type", "application/json")
 
-	client := &http.Client{}
+	client := c.NewHTTPClient()
 	resp, err := client.Do(req)
 	if err != nil {
 		return diag.FromErr(err)
@@ -198,7 +198,7 @@ func resourceHostRead(ctx context.Context, d *schema.ResourceData, m interface{}
 	}
 	req.Header.Set("Authorization", "Bearer "+c.Token)
 
-	client := &http.Client{}
+	client := c.NewHTTPClient()
 	resp, err := client.Do(req)
 	if err != nil {
 		return diag.FromErr(err)
@@ -304,7 +304,7 @@ func resourceHostUpdate(ctx context.Context, d *schema.ResourceData, m interface
 	req.Header.Set("Authorization", "Bearer "+c.Token)
 	req.Header.Set("Content-Type", "application/json")
 
-	client := &http.Client{}
+	client := c.NewHTTPClient()
 	resp, err := client.Do(req)
 	if err != nil {
 		return diag.FromErr(err)
@@ -332,7 +332,7 @@ func resourceHostDelete(ctx context.Context, d *schema.ResourceData, m interface
 	}
 	req.Header.Set("Authorization", "Bearer "+c.Token)
 
-	client := &http.Client{}
+	client := c.NewHTTPClient()
 	resp, err := client.Do(req)
 	if err != nil {
 		return diag.FromErr(err)
@@ -358,7 +358,7 @@ func findDomainIDByName(c *Config, domainName string) (string, error) {
 	}
 	req.Header.Set("Authorization", "Bearer "+c.Token)
 
-	client := &http.Client{}
+	client := c.NewHTTPClient()
 	resp, err := client.Do(req)
 	if err != nil {
 		return "", err
@@ -395,7 +395,7 @@ func findNodeIDByName(c *Config, nodeName string) (string, error) {
 	}
 	req.Header.Set("Authorization", "Bearer "+c.Token)
 
-	client := &http.Client{}
+	client := c.NewHTTPClient()
 	resp, err := client.Do(req)
 	if err != nil {
 		return "", err
