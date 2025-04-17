@@ -28,6 +28,10 @@ func resourceHost() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 			},
+			"comment": {
+				Type:     schema.TypeString,
+				Optional: true,
+			},
 			"platform": {
 				Type:     schema.TypeInt,
 				Required: true,
@@ -135,6 +139,10 @@ func resourceHostCreate(ctx context.Context, d *schema.ResourceData, m interface
 		"nodes":    []string{nodeID},
 	}
 
+	if v, ok := d.GetOk("comment"); ok {
+		hostData["comment"] = v.(string)
+	}
+
 	if v, ok := d.GetOk("accounts"); ok {
 		hostData["accounts"] = expandAccounts(v.([]interface{}))
 	}
@@ -223,6 +231,9 @@ func resourceHostRead(ctx context.Context, d *schema.ResourceData, m interface{}
 	if address, ok := result["address"].(string); ok {
 		d.Set("address", address)
 	}
+	if comment, ok := result["comment"].(string); ok {
+		d.Set("comment", comment)
+	}
 	if platform, ok := result["platform"].(float64); ok {
 		d.Set("platform", int(platform))
 	}
@@ -282,6 +293,10 @@ func resourceHostUpdate(ctx context.Context, d *schema.ResourceData, m interface
 		"platform": d.Get("platform").(int),
 		"domain":   domainID,
 		"nodes":    []string{nodeID},
+	}
+
+	if v, ok := d.GetOk("comment"); ok {
+		hostData["comment"] = v.(string)
 	}
 
 	if v, ok := d.GetOk("accounts"); ok {
