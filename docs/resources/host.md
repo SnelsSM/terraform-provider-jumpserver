@@ -8,9 +8,10 @@ The `jumpserver_host` resource allows you to create and manage *hosts* in Jumpse
 ```hcl
 resource "jumpserver_host" "example_host" {
   # Basic host info
-  name      = "server-lxc1"
-  address   = "10.10.10.50"
-  platform  = 32
+  name     = "server-lxc1"
+  address  = "10.10.10.50"
+  platform = 32
+  comment  = "Production Linux server"
 
   # Domain and Node by name
   domain_name = "Production"
@@ -18,12 +19,12 @@ resource "jumpserver_host" "example_host" {
 
   # Define SSH accounts
   accounts {
-    on_invalid   = "error"
-    is_active    = true
-    name         = "root"
-    username     = "root"
-    secret_type  = "ssh_key"
-    secret       = file("${path.module}/ssh_key/id_ed25519")
+    on_invalid  = "error"
+    is_active   = true
+    name        = "root"
+    username    = "root"
+    secret_type = "ssh_key"
+    secret      = file("${path.module}/ssh_key/id_ed25519")
   }
 
   # Define protocols
@@ -43,6 +44,7 @@ resource "jumpserver_host" "example_host" {
 - **`name`** - (Required) The name of the host in Jumpserver.
 - **`address`** - (Required) The IP address (or hostname) of the host.
 - **`platform`** - (Required) The platform code for this host (e.g., `32` for Linux).
+- **`comment`** - (Optional) A comment or description for the host, you can search host by comment in jumpserver.
 
 - **`domain_name`** - (Required) The **name** of the Domain (Zone) in Jumpserver that this host should belong to. The provider will look up the Domain by its `name` and retrieve its ID to associate the host.
 - **`node_name`** - (Required) The **name** of the Node in Jumpserver that this host should belong to. The provider will look up the Node by its `name` and retrieve its ID to associate the host.
