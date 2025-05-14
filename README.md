@@ -44,3 +44,7 @@ For detailed information on each resource, see the following documentation:
 * [Asset Resource](docs/resources/asset.md)
 * [System User Resource](docs/resources/system_user.md)
 * [Asset Permission Resource](docs/resources/asset_permission.md)
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
