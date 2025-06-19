@@ -161,7 +161,13 @@ func resourceHostCreate(ctx context.Context, d *schema.ResourceData, m interface
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	req.Header.Set("Authorization", "Bearer "+c.Token)
+	if c.Token != "" {
+		req.Header.Set("Authorization", "Bearer "+c.Token)
+	} else {
+		if err := signReq(req, c.AccessKey, c.SecretKey); err != nil {
+			return diag.FromErr(err)
+		}
+	}
 	req.Header.Set("Content-Type", "application/json")
 
 	client := c.NewHTTPClient()
@@ -204,7 +210,13 @@ func resourceHostRead(ctx context.Context, d *schema.ResourceData, m interface{}
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	req.Header.Set("Authorization", "Bearer "+c.Token)
+	if c.Token != "" {
+		req.Header.Set("Authorization", "Bearer "+c.Token)
+	} else {
+		if err := signReq(req, c.AccessKey, c.SecretKey); err != nil {
+			return diag.FromErr(err)
+		}
+	}
 
 	client := c.NewHTTPClient()
 	resp, err := client.Do(req)
@@ -316,7 +328,13 @@ func resourceHostUpdate(ctx context.Context, d *schema.ResourceData, m interface
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	req.Header.Set("Authorization", "Bearer "+c.Token)
+	if c.Token != "" {
+		req.Header.Set("Authorization", "Bearer "+c.Token)
+	} else {
+		if err := signReq(req, c.AccessKey, c.SecretKey); err != nil {
+			return diag.FromErr(err)
+		}
+	}
 	req.Header.Set("Content-Type", "application/json")
 
 	client := c.NewHTTPClient()
@@ -345,7 +363,13 @@ func resourceHostDelete(ctx context.Context, d *schema.ResourceData, m interface
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	req.Header.Set("Authorization", "Bearer "+c.Token)
+	if c.Token != "" {
+		req.Header.Set("Authorization", "Bearer "+c.Token)
+	} else {
+		if err := signReq(req, c.AccessKey, c.SecretKey); err != nil {
+			return diag.FromErr(err)
+		}
+	}
 
 	client := c.NewHTTPClient()
 	resp, err := client.Do(req)
@@ -371,7 +395,13 @@ func findDomainIDByName(c *Config, domainName string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	req.Header.Set("Authorization", "Bearer "+c.Token)
+	if c.Token != "" {
+		req.Header.Set("Authorization", "Bearer "+c.Token)
+	} else {
+		if err := signReq(req, c.AccessKey, c.SecretKey); err != nil {
+			return "", err
+		}
+	}
 
 	client := c.NewHTTPClient()
 	resp, err := client.Do(req)
@@ -408,7 +438,13 @@ func findNodeIDByName(c *Config, nodeName string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	req.Header.Set("Authorization", "Bearer "+c.Token)
+	if c.Token != "" {
+		req.Header.Set("Authorization", "Bearer "+c.Token)
+	} else {
+		if err := signReq(req, c.AccessKey, c.SecretKey); err != nil {
+			return "", err
+		}
+	}
 
 	client := c.NewHTTPClient()
 	resp, err := client.Do(req)

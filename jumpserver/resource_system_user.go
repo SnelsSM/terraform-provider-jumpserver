@@ -5,9 +5,10 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"net/http"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"net/http"
 )
 
 func resourceSystemUser() *schema.Resource {
@@ -124,7 +125,13 @@ func resourceSystemUserCreate(ctx context.Context, d *schema.ResourceData, m int
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	req.Header.Set("Authorization", "Bearer "+c.Token)
+	if c.Token != "" {
+		req.Header.Set("Authorization", "Bearer "+c.Token)
+	} else {
+		if err := signReq(req, c.AccessKey, c.SecretKey); err != nil {
+			return diag.FromErr(err)
+		}
+	}
 	req.Header.Set("Content-Type", "application/json")
 
 	client := &http.Client{}
@@ -165,7 +172,13 @@ func resourceSystemUserRead(ctx context.Context, d *schema.ResourceData, m inter
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	req.Header.Set("Authorization", "Bearer "+c.Token)
+	if c.Token != "" {
+		req.Header.Set("Authorization", "Bearer "+c.Token)
+	} else {
+		if err := signReq(req, c.AccessKey, c.SecretKey); err != nil {
+			return diag.FromErr(err)
+		}
+	}
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
@@ -243,7 +256,13 @@ func resourceSystemUserUpdate(ctx context.Context, d *schema.ResourceData, m int
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	req.Header.Set("Authorization", "Bearer "+c.Token)
+	if c.Token != "" {
+		req.Header.Set("Authorization", "Bearer "+c.Token)
+	} else {
+		if err := signReq(req, c.AccessKey, c.SecretKey); err != nil {
+			return diag.FromErr(err)
+		}
+	}
 	req.Header.Set("Content-Type", "application/json")
 
 	client := &http.Client{}
@@ -275,7 +294,13 @@ func resourceSystemUserDelete(ctx context.Context, d *schema.ResourceData, m int
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	req.Header.Set("Authorization", "Bearer "+c.Token)
+	if c.Token != "" {
+		req.Header.Set("Authorization", "Bearer "+c.Token)
+	} else {
+		if err := signReq(req, c.AccessKey, c.SecretKey); err != nil {
+			return diag.FromErr(err)
+		}
+	}
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
