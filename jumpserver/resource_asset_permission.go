@@ -46,17 +46,17 @@ func resourceAssetPermission() *schema.Resource {
 	}
 }
 
-func resourceAssetPermissionCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceAssetPermissionCreate(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	c := m.(*Config)
 
 	var diags diag.Diagnostics
 
-	permission := map[string]interface{}{
+	permission := map[string]any{
 		"name":                 d.Get("name").(string),
 		"is_active":            d.Get("is_active").(bool),
-		"users_display":        d.Get("users_display").([]interface{}),
-		"assets_display":       d.Get("assets_display").([]interface{}),
-		"system_users_display": d.Get("system_users_display").([]interface{}),
+		"users_display":        d.Get("users_display").([]any),
+		"assets_display":       d.Get("assets_display").([]any),
+		"system_users_display": d.Get("system_users_display").([]any),
 	}
 
 	url := c.BaseURL + "/api/v1/perms/asset-permissions/"
@@ -87,7 +87,7 @@ func resourceAssetPermissionCreate(ctx context.Context, d *schema.ResourceData, 
 		return diag.Errorf("Error creating asset permission: %s", resp.Status)
 	}
 
-	var result map[string]interface{}
+	var result map[string]any
 	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
 		return diag.FromErr(err)
 	}
@@ -103,7 +103,7 @@ func resourceAssetPermissionCreate(ctx context.Context, d *schema.ResourceData, 
 	return diags
 }
 
-func resourceAssetPermissionRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceAssetPermissionRead(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	c := m.(*Config)
 
 	var diags diag.Diagnostics
@@ -135,7 +135,7 @@ func resourceAssetPermissionRead(ctx context.Context, d *schema.ResourceData, m 
 		return diag.Errorf("Error fetching asset permission: %s", resp.Status)
 	}
 
-	var result map[string]interface{}
+	var result map[string]any
 	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
 		return diag.FromErr(err)
 	}
@@ -143,24 +143,24 @@ func resourceAssetPermissionRead(ctx context.Context, d *schema.ResourceData, m 
 	// Update resource data with fetched values
 	d.Set("name", result["name"].(string))
 	d.Set("is_active", result["is_active"].(bool))
-	d.Set("users_display", result["users_display"].([]interface{}))
-	d.Set("assets_display", result["assets_display"].([]interface{}))
-	d.Set("system_users_display", result["system_users_display"].([]interface{}))
+	d.Set("users_display", result["users_display"].([]any))
+	d.Set("assets_display", result["assets_display"].([]any))
+	d.Set("system_users_display", result["system_users_display"].([]any))
 
 	return diags
 }
 
-func resourceAssetPermissionUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceAssetPermissionUpdate(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	c := m.(*Config)
 
 	var diags diag.Diagnostics
 
-	permission := map[string]interface{}{
+	permission := map[string]any{
 		"name":                 d.Get("name").(string),
 		"is_active":            d.Get("is_active").(bool),
-		"users_display":        d.Get("users_display").([]interface{}),
-		"assets_display":       d.Get("assets_display").([]interface{}),
-		"system_users_display": d.Get("system_users_display").([]interface{}),
+		"users_display":        d.Get("users_display").([]any),
+		"assets_display":       d.Get("assets_display").([]any),
+		"system_users_display": d.Get("system_users_display").([]any),
 	}
 
 	id := d.Id()
@@ -197,7 +197,7 @@ func resourceAssetPermissionUpdate(ctx context.Context, d *schema.ResourceData, 
 	return diags
 }
 
-func resourceAssetPermissionDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceAssetPermissionDelete(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	c := m.(*Config)
 
 	var diags diag.Diagnostics

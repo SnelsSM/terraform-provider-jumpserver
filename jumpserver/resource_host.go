@@ -115,7 +115,7 @@ func resourceHost() *schema.Resource {
 // -------------------------------------------------------------------
 // Create
 // -------------------------------------------------------------------
-func resourceHostCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceHostCreate(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	c := m.(*Config)
 	var diags diag.Diagnostics
 
@@ -131,7 +131,7 @@ func resourceHostCreate(ctx context.Context, d *schema.ResourceData, m interface
 		return diag.FromErr(err)
 	}
 
-	hostData := map[string]interface{}{
+	hostData := map[string]any{
 		"name":     d.Get("name").(string),
 		"address":  d.Get("address").(string),
 		"platform": d.Get("platform").(int),
@@ -144,11 +144,11 @@ func resourceHostCreate(ctx context.Context, d *schema.ResourceData, m interface
 	}
 
 	if v, ok := d.GetOk("accounts"); ok {
-		hostData["accounts"] = expandAccounts(v.([]interface{}))
+		hostData["accounts"] = expandAccounts(v.([]any))
 	}
 
 	if v, ok := d.GetOk("protocols"); ok {
-		hostData["protocols"] = expandProtocols(v.([]interface{}))
+		hostData["protocols"] = expandProtocols(v.([]any))
 	}
 
 	jsonValue, err := json.Marshal(hostData)
@@ -181,7 +181,7 @@ func resourceHostCreate(ctx context.Context, d *schema.ResourceData, m interface
 		return diag.Errorf("Failed to create host in JumpServer. HTTP status: %d", resp.StatusCode)
 	}
 
-	var result map[string]interface{}
+	var result map[string]any
 	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
 		return diag.FromErr(err)
 	}
@@ -201,7 +201,7 @@ func resourceHostCreate(ctx context.Context, d *schema.ResourceData, m interface
 // -------------------------------------------------------------------
 // Read
 // -------------------------------------------------------------------
-func resourceHostRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceHostRead(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	c := m.(*Config)
 	var diags diag.Diagnostics
 
@@ -232,7 +232,7 @@ func resourceHostRead(ctx context.Context, d *schema.ResourceData, m interface{}
 		return diag.Errorf("Failed to read host. HTTP status: %d", resp.StatusCode)
 	}
 
-	var result map[string]interface{}
+	var result map[string]any
 	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
 		return diag.FromErr(err)
 	}
@@ -252,14 +252,14 @@ func resourceHostRead(ctx context.Context, d *schema.ResourceData, m interface{}
 	if domain, ok := result["domain"].(string); ok {
 		d.Set("domain_id", domain)
 	}
-	if nodes, ok := result["nodes"].([]interface{}); ok {
+	if nodes, ok := result["nodes"].([]any); ok {
 		d.Set("node_ids", nodes)
 	}
 
-	if accounts, ok := result["accounts"].([]interface{}); ok {
+	if accounts, ok := result["accounts"].([]any); ok {
 		d.Set("accounts", flattenAccounts(accounts))
 	}
-	if protocols, ok := result["protocols"].([]interface{}); ok {
+	if protocols, ok := result["protocols"].([]any); ok {
 		d.Set("protocols", flattenProtocols(protocols))
 	}
 
@@ -269,11 +269,11 @@ func resourceHostRead(ctx context.Context, d *schema.ResourceData, m interface{}
 // -------------------------------------------------------------------
 // Update
 // -------------------------------------------------------------------
-func resourceHostUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceHostUpdate(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	c := m.(*Config)
 
 	domainID := d.Get("domain_id").(string)
-	nodeIDsRaw := d.Get("node_ids").([]interface{})
+	nodeIDsRaw := d.Get("node_ids").([]any)
 	var nodeID string
 	if len(nodeIDsRaw) > 0 {
 		nodeID = nodeIDsRaw[0].(string)
@@ -299,7 +299,7 @@ func resourceHostUpdate(ctx context.Context, d *schema.ResourceData, m interface
 		d.Set("node_ids", []string{foundID})
 	}
 
-	hostData := map[string]interface{}{
+	hostData := map[string]any{
 		"name":     d.Get("name").(string),
 		"address":  d.Get("address").(string),
 		"platform": d.Get("platform").(int),
@@ -312,10 +312,10 @@ func resourceHostUpdate(ctx context.Context, d *schema.ResourceData, m interface
 	}
 
 	if v, ok := d.GetOk("accounts"); ok {
-		hostData["accounts"] = expandAccounts(v.([]interface{}))
+		hostData["accounts"] = expandAccounts(v.([]any))
 	}
 	if v, ok := d.GetOk("protocols"); ok {
-		hostData["protocols"] = expandProtocols(v.([]interface{}))
+		hostData["protocols"] = expandProtocols(v.([]any))
 	}
 
 	jsonValue, err := json.Marshal(hostData)
@@ -354,7 +354,7 @@ func resourceHostUpdate(ctx context.Context, d *schema.ResourceData, m interface
 // -------------------------------------------------------------------
 // Delete
 // -------------------------------------------------------------------
-func resourceHostDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceHostDelete(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	c := m.(*Config)
 	var diags diag.Diagnostics
 
@@ -414,7 +414,7 @@ func findDomainIDByName(c *Config, domainName string) (string, error) {
 		return "", fmt.Errorf("failed to list domains, status=%d", resp.StatusCode)
 	}
 
-	var domains []map[string]interface{}
+	var domains []map[string]any
 	if err := json.NewDecoder(resp.Body).Decode(&domains); err != nil {
 		return "", err
 	}
@@ -457,7 +457,7 @@ func findNodeIDByName(c *Config, nodeName string) (string, error) {
 		return "", fmt.Errorf("failed to list nodes, status=%d", resp.StatusCode)
 	}
 
-	var nodes []map[string]interface{}
+	var nodes []map[string]any
 	if err := json.NewDecoder(resp.Body).Decode(&nodes); err != nil {
 		return "", err
 	}
@@ -475,11 +475,11 @@ func findNodeIDByName(c *Config, nodeName string) (string, error) {
 	return "", fmt.Errorf("node '%s' not found in JumpServer", nodeName)
 }
 
-func expandAccounts(list []interface{}) []map[string]interface{} {
-	var result []map[string]interface{}
+func expandAccounts(list []any) []map[string]any {
+	var result []map[string]any
 	for _, item := range list {
-		m := item.(map[string]interface{})
-		acc := map[string]interface{}{
+		m := item.(map[string]any)
+		acc := map[string]any{
 			"on_invalid":  m["on_invalid"].(string),
 			"is_active":   m["is_active"].(bool),
 			"name":        m["name"].(string),
@@ -492,11 +492,11 @@ func expandAccounts(list []interface{}) []map[string]interface{} {
 	return result
 }
 
-func expandProtocols(list []interface{}) []map[string]interface{} {
-	var result []map[string]interface{}
+func expandProtocols(list []any) []map[string]any {
+	var result []map[string]any
 	for _, item := range list {
-		m := item.(map[string]interface{})
-		proto := map[string]interface{}{
+		m := item.(map[string]any)
+		proto := map[string]any{
 			"name": m["name"].(string),
 			"port": m["port"].(int),
 		}
@@ -505,11 +505,11 @@ func expandProtocols(list []interface{}) []map[string]interface{} {
 	return result
 }
 
-func flattenAccounts(accounts []interface{}) []interface{} {
-	var result []interface{}
+func flattenAccounts(accounts []any) []any {
+	var result []any
 	for _, a := range accounts {
-		m := a.(map[string]interface{})
-		acc := map[string]interface{}{
+		m := a.(map[string]any)
+		acc := map[string]any{
 			"on_invalid":  m["on_invalid"],
 			"is_active":   m["is_active"],
 			"name":        m["name"],
@@ -521,11 +521,11 @@ func flattenAccounts(accounts []interface{}) []interface{} {
 	return result
 }
 
-func flattenProtocols(protocols []interface{}) []interface{} {
-	var result []interface{}
+func flattenProtocols(protocols []any) []any {
+	var result []any
 	for _, p := range protocols {
-		m := p.(map[string]interface{})
-		proto := map[string]interface{}{
+		m := p.(map[string]any)
+		proto := map[string]any{
 			"name": m["name"],
 			"port": m["port"],
 		}

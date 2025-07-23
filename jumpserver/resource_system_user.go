@@ -91,13 +91,13 @@ func resourceSystemUser() *schema.Resource {
 	}
 }
 
-func resourceSystemUserCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceSystemUserCreate(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	c := m.(*Config)
 
 	var diags diag.Diagnostics
 
 	// Prepare payload
-	payload := map[string]interface{}{
+	payload := map[string]any{
 		"name":                    d.Get("name").(string),
 		"username":                d.Get("username").(string),
 		"password":                d.Get("password").(string),
@@ -145,7 +145,7 @@ func resourceSystemUserCreate(ctx context.Context, d *schema.ResourceData, m int
 		return diag.Errorf("Failed to create system user. Status code: %d", resp.StatusCode)
 	}
 
-	var result map[string]interface{}
+	var result map[string]any
 	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
 		return diag.FromErr(err)
 	}
@@ -160,7 +160,7 @@ func resourceSystemUserCreate(ctx context.Context, d *schema.ResourceData, m int
 	return diags
 }
 
-func resourceSystemUserRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceSystemUserRead(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	c := m.(*Config)
 
 	var diags diag.Diagnostics
@@ -191,7 +191,7 @@ func resourceSystemUserRead(ctx context.Context, d *schema.ResourceData, m inter
 		return diag.Errorf("Error fetching system user: %s", resp.Status)
 	}
 
-	var result map[string]interface{}
+	var result map[string]any
 	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
 		return diag.FromErr(err)
 	}
@@ -222,13 +222,13 @@ func resourceSystemUserRead(ctx context.Context, d *schema.ResourceData, m inter
 	return diags
 }
 
-func resourceSystemUserUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceSystemUserUpdate(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	c := m.(*Config)
 
 	var diags diag.Diagnostics
 
 	// Prepare payload for update
-	payload := map[string]interface{}{
+	payload := map[string]any{
 		"name":                    d.Get("name").(string),
 		"username":                d.Get("username").(string),
 		"password":                d.Get("password").(string),
@@ -282,7 +282,7 @@ func resourceSystemUserUpdate(ctx context.Context, d *schema.ResourceData, m int
 	return diags
 }
 
-func resourceSystemUserDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceSystemUserDelete(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	c := m.(*Config)
 
 	var diags diag.Diagnostics

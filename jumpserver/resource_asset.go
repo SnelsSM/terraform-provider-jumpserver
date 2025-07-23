@@ -45,16 +45,16 @@ func resourceAsset() *schema.Resource {
 	}
 }
 
-func resourceAssetCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceAssetCreate(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	c := m.(*Config)
 	var diags diag.Diagnostics
 
-	asset := map[string]interface{}{
+	asset := map[string]any{
 		"hostname":      d.Get("hostname").(string),
 		"ip":            d.Get("ip").(string),
 		"platform":      d.Get("platform").(string),
-		"protocols":     d.Get("protocols").([]interface{}),
-		"nodes_display": d.Get("nodes_display").([]interface{}),
+		"protocols":     d.Get("protocols").([]any),
+		"nodes_display": d.Get("nodes_display").([]any),
 	}
 
 	url := c.BaseURL + "/api/v1/assets/assets/"
@@ -85,7 +85,7 @@ func resourceAssetCreate(ctx context.Context, d *schema.ResourceData, m interfac
 		return diag.Errorf("Error creating asset: %s", resp.Status)
 	}
 
-	var result map[string]interface{}
+	var result map[string]any
 	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
 		return diag.FromErr(err)
 	}
@@ -101,7 +101,7 @@ func resourceAssetCreate(ctx context.Context, d *schema.ResourceData, m interfac
 	return diags
 }
 
-func resourceAssetRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceAssetRead(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	c := m.(*Config)
 
 	var diags diag.Diagnostics
@@ -133,7 +133,7 @@ func resourceAssetRead(ctx context.Context, d *schema.ResourceData, m interface{
 		return diag.Errorf("Error fetching asset: %s", resp.Status)
 	}
 
-	var result map[string]interface{}
+	var result map[string]any
 	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
 		return diag.FromErr(err)
 	}
@@ -142,23 +142,23 @@ func resourceAssetRead(ctx context.Context, d *schema.ResourceData, m interface{
 	d.Set("hostname", result["hostname"].(string))
 	d.Set("ip", result["ip"].(string))
 	d.Set("platform", result["platform"].(string))
-	d.Set("protocols", result["protocols"].([]interface{}))
-	d.Set("nodes_display", result["nodes_display"].([]interface{}))
+	d.Set("protocols", result["protocols"].([]any))
+	d.Set("nodes_display", result["nodes_display"].([]any))
 
 	return diags
 }
 
-func resourceAssetUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceAssetUpdate(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	c := m.(*Config)
 
 	var diags diag.Diagnostics
 
-	asset := map[string]interface{}{
+	asset := map[string]any{
 		"hostname":      d.Get("hostname").(string),
 		"ip":            d.Get("ip").(string),
 		"platform":      d.Get("platform").(string),
-		"protocols":     d.Get("protocols").([]interface{}),
-		"nodes_display": d.Get("nodes_display").([]interface{}),
+		"protocols":     d.Get("protocols").([]any),
+		"nodes_display": d.Get("nodes_display").([]any),
 	}
 
 	id := d.Id()
@@ -195,7 +195,7 @@ func resourceAssetUpdate(ctx context.Context, d *schema.ResourceData, m interfac
 	return diags
 }
 
-func resourceAssetDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceAssetDelete(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	c := m.(*Config)
 
 	var diags diag.Diagnostics
