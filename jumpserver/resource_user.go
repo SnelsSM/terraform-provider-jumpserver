@@ -45,17 +45,17 @@ func resourceUser() *schema.Resource {
 	}
 }
 
-func resourceUserCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceUserCreate(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	c := m.(*Config)
 
 	var diags diag.Diagnostics
 
-	user := map[string]interface{}{
+	user := map[string]any{
 		"name":         d.Get("name").(string),
 		"username":     d.Get("username").(string),
 		"email":        d.Get("email").(string),
 		"is_active":    d.Get("is_active").(bool),
-		"system_roles": d.Get("system_roles").([]interface{}),
+		"system_roles": d.Get("system_roles").([]any),
 	}
 
 	url := c.BaseURL + "/api/v1/users/users/"
@@ -89,7 +89,7 @@ func resourceUserCreate(ctx context.Context, d *schema.ResourceData, m interface
 		return diag.Errorf("Error creating user: %s", resp.Status)
 	}
 
-	var result map[string]interface{}
+	var result map[string]any
 	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
 		return diag.FromErr(err)
 	}
@@ -108,7 +108,7 @@ func resourceUserCreate(ctx context.Context, d *schema.ResourceData, m interface
 	return diags
 }
 
-func resourceUserRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceUserRead(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	c := m.(*Config)
 
 	var diags diag.Diagnostics
@@ -142,7 +142,7 @@ func resourceUserRead(ctx context.Context, d *schema.ResourceData, m interface{}
 		return diag.Errorf("Error reading user: %s", resp.Status)
 	}
 
-	var user map[string]interface{}
+	var user map[string]any
 	if err := json.NewDecoder(resp.Body).Decode(&user); err != nil {
 		return diag.FromErr(err)
 	}
@@ -151,22 +151,22 @@ func resourceUserRead(ctx context.Context, d *schema.ResourceData, m interface{}
 	d.Set("username", user["username"].(string))
 	d.Set("email", user["email"].(string))
 	d.Set("is_active", user["is_active"].(bool))
-	d.Set("system_roles", user["system_roles"].([]interface{}))
+	d.Set("system_roles", user["system_roles"].([]any))
 
 	return diags
 }
 
-func resourceUserUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceUserUpdate(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	c := m.(*Config)
 
 	var diags diag.Diagnostics
 
-	user := map[string]interface{}{
+	user := map[string]any{
 		"name":         d.Get("name").(string),
 		"username":     d.Get("username").(string),
 		"email":        d.Get("email").(string),
 		"is_active":    d.Get("is_active").(bool),
-		"system_roles": d.Get("system_roles").([]interface{}),
+		"system_roles": d.Get("system_roles").([]any),
 	}
 
 	url := fmt.Sprintf("%s/api/v1/users/users/%s/", c.BaseURL, d.Id())
@@ -200,7 +200,7 @@ func resourceUserUpdate(ctx context.Context, d *schema.ResourceData, m interface
 	return diags
 }
 
-func resourceUserDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceUserDelete(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	c := m.(*Config)
 
 	var diags diag.Diagnostics

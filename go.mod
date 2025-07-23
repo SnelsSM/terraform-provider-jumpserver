@@ -2,7 +2,10 @@ module github.com/gustavo-bolis/terraform-provider-jumpserver
 
 go 1.22.5
 
-require github.com/hashicorp/terraform-plugin-sdk/v2 v2.34.0
+require (
+	github.com/hashicorp/terraform-plugin-sdk/v2 v2.34.0
+	gopkg.in/twindagger/httpsig.v1 v1.2.0
+)
 
 require (
 	github.com/agext/levenshtein v1.2.2 // indirect
@@ -43,5 +46,4 @@ require (
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240227224415-6ceb2ff114de // indirect
 	google.golang.org/grpc v1.63.2 // indirect
 	google.golang.org/protobuf v1.34.0 // indirect
-	gopkg.in/twindagger/httpsig.v1 v1.2.0 // indirect
 )

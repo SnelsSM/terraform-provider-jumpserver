@@ -111,12 +111,13 @@ func Provider() *schema.Provider {
 			"jumpserver_asset":            resourceAsset(),
 			"jumpserver_system_user":      resourceSystemUser(),
 			"jumpserver_asset_permission": resourceAssetPermission(),
+			"jumpserver_node":             resourceNode(),
 		},
 		ConfigureContextFunc: providerConfigure,
 	}
 }
 
-func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}, diag.Diagnostics) {
+func providerConfigure(ctx context.Context, d *schema.ResourceData) (any, diag.Diagnostics) {
 	var diags diag.Diagnostics
 	var token string
 
@@ -176,7 +177,7 @@ func getToken(client *http.Client, baseURL, username, password string) (string, 
 	}
 	defer resp.Body.Close()
 
-	var result map[string]interface{}
+	var result map[string]any
 	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
 		return "", err
 	}
